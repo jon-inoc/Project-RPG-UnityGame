@@ -5,17 +5,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerCombatMelee : MonoBehaviour
 {
-    private Animator _animator;
+    public static PlayerCombatMelee Instance;
+    public Animator _animator;
     [SerializeField] private PlayerController _playerController;
+    [SerializeField] private float DamageAfterTime;
+    [SerializeField] private float StrongDamageAfterTime;
+    [SerializeField] private int Damage;
+    [SerializeField] private AttackArea _attackArea;
+
+    public bool isAttacking = false;
+    public bool isBlocking = false;
 
     private void Awake()
     {
+        Instance = this;
         _animator = GetComponentInChildren<Animator>();
     }
 
     public void OnAttack(InputValue value)
     {
-        _animator.SetTrigger("Attack");
+        //_animator.SetTrigger("Attack");
+        isAttacking = true;
     }
 
     public void OnStrongAttack(InputValue value)
@@ -34,6 +44,15 @@ public class PlayerCombatMelee : MonoBehaviour
         if (!blocking) 
         {
             _playerController.ResetAnim(0.1f);
+        }
+    }
+
+    private IEnumerator Hit(bool isStrongAtk) 
+    {
+        yield return new WaitForSeconds(isStrongAtk ? StrongDamageAfterTime : DamageAfterTime);
+        foreach (var attackAreaDamageable in _attackArea.Damageables) 
+        {
+            attackAreaDamageable.Damage(Damage * (isStrongAtk ? 5 : 3));
         }
     }
 }

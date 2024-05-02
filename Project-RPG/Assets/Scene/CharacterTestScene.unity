@@ -482,13 +482,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anima: {fileID: 0}
-  player: {fileID: 1817474604}
+  player: {fileID: 326259806}
   _rb: {fileID: 326259804}
   _speed: 5
   _turnSpeed: 360
-  _cooldownTime: 5
-  _nextFireTime: 360
   isAnimating: 0
+  isBlocking: 0
 --- !u!4 &326259806
 Transform:
   m_ObjectHideFlags: 0
@@ -951,14 +950,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089744857}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.39044833, y: 0.34682897, z: -0.161729, w: 0.8373192}
+  m_LocalRotation: {x: 0.46193978, y: 0.33141357, z: -0.19134171, w: 0.8001032}
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1442540100}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 45, z: 0}
 --- !u!114 &2089744859
 MonoBehaviour:
   m_ObjectHideFlags: 0

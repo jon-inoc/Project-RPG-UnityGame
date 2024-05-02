@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     public static int noOfClicks = 0;
     float lastClickedTime = 0;
     public bool isAnimating = false;
-
     public bool isBlocking = false;
 
     private void Awake()
@@ -35,7 +34,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isBlocking)
+        if (PlayerCombatMelee.Instance.isAttacking || isBlocking)
         {
             return;
         }
@@ -45,7 +44,10 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        if (PlayerCombatMelee.Instance.isAttacking) 
+        {
+            return;
+        }
         Move();
     }
 
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         isAnimating = true;
         _speed = 1.5f;
-        ResetAnim(0.2f);
+        ResetAnim(0.4f);
     }
 
     public void OnBlock(InputValue value) 
