@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,10 +16,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _turnSpeed = 360f;
 
-    [SerializeField] private float _cooldownTime = 5f;
-    [SerializeField] private float _nextFireTime = 360f;
     public static int noOfClicks = 0;
     float lastClickedTime = 0;
+    public bool isAnimating = false;
+
+    public bool isBlocking = false;
 
     private void Awake()
     {
@@ -33,17 +35,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isBlocking)
+        {
+            return;
+        }
         GatherInput();
         Look();
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
+
         Move();
     }
 
     void GatherInput() 
     {
+        if (isAnimating || isBlocking)
+        {
+            return;
+        }
         _moveInput = new Vector3(_move.x, 0, _move.y);
     }
 
@@ -60,6 +71,11 @@ public class PlayerController : MonoBehaviour
 
     void Move() 
     {
+        if (isAnimating || isBlocking)
+        {
+            anima.SetFloat("Speed", 0f);
+            return;
+        }
         _rb.MovePosition(transform.position + (transform.forward * _moveInput.magnitude) * _speed * Time.deltaTime);
         if (_moveInput.magnitude > 0)
         {
@@ -71,8 +87,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnDodge() 
+    public void OnDodge()
     {
+        isAnimating = true;
         anima.SetTrigger("Dodge");
+
+        _rb.AddForce(transform.forward * 450f);
+        ResetAnim(0.2f);
+    }
+
+
+    public void ResetAnim(float duration) 
+    {
+        StartCoroutine(ResetAnimCoroutine(duration));
+    }
+
+    private IEnumerator ResetAnimCoroutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _speed = 5f;
+        isAnimating = false;
+    }
+
+    public void OnAttack() 
+    {
+        isAnimating = true;
+        _speed = 1.5f;
+        ResetAnim(0.2f);
+    }
+
+    public void OnBlock(InputValue value) 
+    {
+        isBlocking = value.isPressed;
     }
 }

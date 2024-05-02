@@ -488,6 +488,7 @@ MonoBehaviour:
   _turnSpeed: 360
   _cooldownTime: 5
   _nextFireTime: 360
+  isAnimating: 0
 --- !u!4 &326259806
 Transform:
   m_ObjectHideFlags: 0
@@ -565,9 +566,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 326259803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05a97fdb7c217fa4480d955affdeb047, type: 3}
+  m_Script: {fileID: 11500000, guid: 72631bb2a225e314e9dc0ae973d4564d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerController: {fileID: 326259805}
 --- !u!1 &731595944
 GameObject:
   m_ObjectHideFlags: 0
