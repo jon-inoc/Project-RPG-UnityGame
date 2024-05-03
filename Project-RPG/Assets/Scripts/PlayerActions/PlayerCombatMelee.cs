@@ -10,11 +10,16 @@ public class PlayerCombatMelee : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private float DamageAfterTime;
     [SerializeField] private float StrongDamageAfterTime;
+    [SerializeField] private float StrongCooldownTime = 4f;
     [SerializeField] private int Damage;
+    [SerializeField] private int StrongDamage;
     [SerializeField] private AttackArea _attackArea;
 
     public bool isAttacking = false;
+    public bool isAttackingStrong = false;
+    public bool isStrongAttackCooldown = false;
     public bool isBlocking = false;
+    public bool isHitByEnemy = false;
 
     private void Awake()
     {
@@ -22,17 +27,32 @@ public class PlayerCombatMelee : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
     }
 
+    private void FixedUpdate()
+    {
+        if (isStrongAttackCooldown) 
+        {
+            StrongCooldownTime -= Time.deltaTime;
+            if (StrongCooldownTime < 0) 
+            {
+                isStrongAttackCooldown = false; 
+                StrongCooldownTime = 4f;
+            }
+        }
+    }
+
     public void OnAttack(InputValue value)
     {
-        //_animator.SetTrigger("Attack");
         isAttacking = true;
+        StartCoroutine(Hit(false));
     }
 
     public void OnStrongAttack(InputValue value)
     {
-        //_playerController.isAnimating = true;
-        //_animator.SetTrigger("StrongAttack");
-        //_playerController.ResetAnim(1.3f);
+        if (isStrongAttackCooldown) return;
+
+        isAttackingStrong = true;
+        isStrongAttackCooldown = true;
+        StartCoroutine(Hit(true));
     }
 
     public void OnBlock(InputValue value)
@@ -52,7 +72,7 @@ public class PlayerCombatMelee : MonoBehaviour
         yield return new WaitForSeconds(isStrongAtk ? StrongDamageAfterTime : DamageAfterTime);
         foreach (var attackAreaDamageable in _attackArea.Damageables) 
         {
-            attackAreaDamageable.Damage(Damage * (isStrongAtk ? 5 : 3));
+            attackAreaDamageable.Damage(Damage * (isStrongAtk ? StrongDamage : Damage), isStrongAtk);
         }
     }
 }

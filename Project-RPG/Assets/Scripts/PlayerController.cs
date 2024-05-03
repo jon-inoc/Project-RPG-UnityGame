@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
+
     public Animator anima;
     public Transform player;
     public Rigidbody _rb;
@@ -16,13 +18,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _turnSpeed = 360f;
 
-    public static int noOfClicks = 0;
-    float lastClickedTime = 0;
     public bool isAnimating = false;
     public bool isBlocking = false;
 
     private void Awake()
     {
+        Instance = this;    
         anima = GetComponentInChildren<Animator>();
         _inputs = new ProjectRPGGame();
         _inputs.Player.Move.performed += context => _move = context.ReadValue<Vector2>();
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerCombatMelee.Instance.isAttacking || isBlocking)
+        if (isBlocking)
         {
             return;
         }
@@ -44,10 +45,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (PlayerCombatMelee.Instance.isAttacking) 
-        {
-            return;
-        }
         Move();
     }
 
@@ -107,12 +104,14 @@ public class PlayerController : MonoBehaviour
     private IEnumerator ResetAnimCoroutine(float duration)
     {
         yield return new WaitForSeconds(duration);
-        _speed = 5f;
         isAnimating = false;
+        _speed = 5f;
     }
 
     public void OnAttack() 
     {
+        if (PlayerCombatMelee.Instance.isAttacking) return;
+
         isAnimating = true;
         _speed = 1.5f;
         ResetAnim(0.4f);

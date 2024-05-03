@@ -17,12 +17,18 @@ public class PlayerIdleBehaviour : StateMachineBehaviour
         {
             PlayerCombatMelee.Instance._animator.Play("Attack1");
         }
+
+        if (PlayerCombatMelee.Instance.isAttackingStrong)
+        {
+            PlayerCombatMelee.Instance._animator.Play("StrongAttack1");
+        }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         PlayerCombatMelee.Instance.isAttacking = false;
+        PlayerCombatMelee.Instance.isAttackingStrong = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

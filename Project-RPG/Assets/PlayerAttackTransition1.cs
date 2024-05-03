@@ -15,7 +15,7 @@ public class PlayerAttackTransition1 : StateMachineBehaviour
     {
         if (PlayerCombatMelee.Instance.isAttacking)
         {
-            PlayerCombatMelee.Instance._animator.Play("Attack2");
+            PlayerCombatMelee.Instance._animator.Play("Attack1");
         }
     }
 
